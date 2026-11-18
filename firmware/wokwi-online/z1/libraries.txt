@@ -1,0 +1,5 @@
+# Bibliotecas do projeto online (aba libraries.txt do Wokwi)
+PubSubClient
+DHT sensor library
+Adafruit Unified Sensor
+LiquidCrystal I2C
