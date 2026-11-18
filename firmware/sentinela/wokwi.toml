@@ -1,0 +1,5 @@
+# Para simular a Zona 2, troque "z1" por "z2" nos dois caminhos e rode "pio run -e z2".
+[wokwi]
+version = 1
+firmware = '.pio/build/z1/firmware.bin'
+elf = '.pio/build/z1/firmware.elf'
