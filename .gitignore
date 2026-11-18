@@ -1,0 +1,22 @@
+# Credenciais (nunca versionar)
+secrets.h
+**/include/secrets.h
+.env
+*.env
+!.env.example
+
+# PlatformIO / IDE
+.pio/
+.vscode/
+build/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sistema e temporarios do Word
+.DS_Store
+Thumbs.db
+~$*
