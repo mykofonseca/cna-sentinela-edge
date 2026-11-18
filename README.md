@@ -38,6 +38,7 @@ Máquina de estados do nó:
 
 ```
 firmware/sentinela   projeto PlatformIO (env:z1 e env:z2), diagram.json e wokwi.toml
+firmware/wokwi-online arquivos para o projeto online do Wokwi (z1/ e z2/) e o script montar.py
 drone/drone.py       drone simulado
 ponte/ponte.py       ponte HiveMQ <-> Ubidots
 docs/                relatório (DOCX e PDF), diagramas, prints e roteiro do vídeo
@@ -66,7 +67,7 @@ pio run -e z1        # gera .pio/build/z1/firmware.bin
 pio run -e z2
 ```
 
-No VS Code com a extensão Wokwi, abra `diagram.json` e rode *Wokwi: Start Simulator*. O `wokwi.toml` aponta para o build da Z1; para a Z2, troque `z1` por `z2` nos dois caminhos. Para rodar as duas zonas ao mesmo tempo, use os dois projetos online do Wokwi (links acima), cada um com o valor padrão de `ZONA_ID` ajustado em `config.h` (1 ou 2).
+No VS Code com a extensão Wokwi, abra `diagram.json` e rode *Wokwi: Start Simulator*. O `wokwi.toml` aponta para o build da Z1; para a Z2, troque `z1` por `z2` nos dois caminhos. Para rodar as duas zonas ao mesmo tempo, use os dois projetos online do Wokwi (links acima). Os arquivos prontos para colar ficam em `firmware/wokwi-online/z1` e `z2`, e o passo a passo está em [docs/guia-wokwi.md](docs/guia-wokwi.md).
 
 Horário permitido: das 7h às 19h (`HORA_INICIO` e `HORA_FIM` no `platformio.ini`). Para demonstrar a regra de "fora do horário" a qualquer hora, publique no tópico `cna/zona/{id}/teste`:
 
@@ -116,3 +117,4 @@ Códigos numéricos no Ubidots: estado `NORMAL=0, ATENCAO=1, ALERTA=2, CRITICO=3
 
 - Relatório: [docs/relatorio-cna-sentinela.pdf](docs/relatorio-cna-sentinela.pdf) (também em DOCX)
 - Roteiro do vídeo: [docs/roteiro-video.md](docs/roteiro-video.md)
+- Guia do Wokwi online: [docs/guia-wokwi.md](docs/guia-wokwi.md)
