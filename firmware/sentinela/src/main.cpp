@@ -45,6 +45,32 @@ bool horarioPublicado = false;
 bool foraPublicado = false;
 Estado estadoPublicado = NORMAL;
 
+// O Wokwi online usa o core 3.x do ESP32, que trocou a API do LEDC (canal -> pino).
+void pwmIniciar(uint8_t pino, uint8_t canal, uint32_t freq) {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcAttachChannel(pino, freq, 8, canal);
+#else
+  ledcSetup(canal, freq, 8);
+  ledcAttachPin(pino, canal);
+#endif
+}
+
+void pwmEscrever(uint8_t pino, uint8_t canal, uint32_t duty) {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcWrite(pino, duty);
+#else
+  ledcWrite(canal, duty);
+#endif
+}
+
+void pwmTom(uint8_t pino, uint8_t canal, uint32_t freq) {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcWriteTone(pino, freq);
+#else
+  ledcWriteTone(canal, freq);
+#endif
+}
+
 bool lerDebounce(Debounce& d, uint32_t agora) {
   bool l = digitalRead(d.pino);
   if (l != d.leitura) {
@@ -65,9 +91,9 @@ bool foraDoHorario() {
 }
 
 void corLed(uint8_t r, uint8_t g, uint8_t b) {
-  ledcWrite(CANAL_R, r);
-  ledcWrite(CANAL_G, g);
-  ledcWrite(CANAL_B, b);
+  pwmEscrever(PINO_LED_R, CANAL_R, r);
+  pwmEscrever(PINO_LED_G, CANAL_G, g);
+  pwmEscrever(PINO_LED_B, CANAL_B, b);
 }
 
 void atualizarLed(Estado e, bool silenciado, uint32_t agora) {
@@ -97,7 +123,7 @@ uint16_t frequenciaBuzzer(Estado e, bool silenciado, uint32_t agora) {
 void atualizarBuzzer(uint32_t agora) {
   uint16_t f = frequenciaBuzzer(maquina.estado(), maquina.silenciado(), agora);
   if (f != freqAtual) {
-    ledcWriteTone(CANAL_BUZZER, f);
+    pwmTom(PINO_BUZZER, CANAL_BUZZER, f);
     freqAtual = f;
   }
 }
@@ -160,15 +186,11 @@ void setup() {
   pinMode(PINO_PORTAO, INPUT_PULLUP);
   pinMode(PINO_TAMPER, INPUT_PULLUP);
 
-  ledcSetup(CANAL_R, 5000, 8);
-  ledcSetup(CANAL_G, 5000, 8);
-  ledcSetup(CANAL_B, 5000, 8);
-  ledcAttachPin(PINO_LED_R, CANAL_R);
-  ledcAttachPin(PINO_LED_G, CANAL_G);
-  ledcAttachPin(PINO_LED_B, CANAL_B);
-  ledcSetup(CANAL_BUZZER, 2000, 8);
-  ledcAttachPin(PINO_BUZZER, CANAL_BUZZER);
-  ledcWriteTone(CANAL_BUZZER, 0);
+  pwmIniciar(PINO_LED_R, CANAL_R, 5000);
+  pwmIniciar(PINO_LED_G, CANAL_G, 5000);
+  pwmIniciar(PINO_LED_B, CANAL_B, 5000);
+  pwmIniciar(PINO_BUZZER, CANAL_BUZZER, 2000);
+  pwmTom(PINO_BUZZER, CANAL_BUZZER, 0);
 
   lcd.init();
   lcd.backlight();
