@@ -1,0 +1,17 @@
+stateDiagram-v2
+  direction LR
+  [*] --> NORMAL
+  NORMAL --> ATENCAO: PIR, PORTAO ou TEMP_ALTA
+  ATENCAO --> NORMAL: sem condição por 5 s
+  ATENCAO --> ALERTA: PIR_PORTAO ou PERSISTENCIA (30 s)
+  NORMAL --> ALERTA: PIR_PORTAO
+  NORMAL --> CRITICO: TAMPER ou TEMP_CRITICA
+  ATENCAO --> CRITICO: TAMPER ou TEMP_CRITICA
+  ALERTA --> CRITICO: TAMPER ou TEMP_CRITICA
+  ALERTA --> NORMAL: ACK + REARMAR
+  CRITICO --> NORMAL: ACK + REARMAR
+  note right of CRITICO
+    ALERTA e CRITICO ficam travados.
+    REARMAR só vale depois do ACK
+    e com as condições normalizadas.
+  end note

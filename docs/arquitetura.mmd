@@ -1,0 +1,20 @@
+flowchart LR
+  subgraph BORDA["Borda: ESP32 no Wokwi"]
+    direction TB
+    Z1["Nó Sentinela Z1<br/>PIR, portão, tamper, DHT22<br/>LED RGB, buzzer, LCD"]
+    Z2["Nó Sentinela Z2<br/>mesmo firmware, ZONA_ID=2"]
+  end
+  B[("HiveMQ Cloud<br/>MQTT sobre TLS, porta 8883")]
+  P["Ponte<br/>ponte.py<br/>texto para número"]
+  U["Centro de Operações<br/>Ubidots"]
+  D["Drone simulado<br/>drone.py"]
+
+  Z1 -- "cna/zona/1/estado, evento,<br/>temperatura, cna/drone/missao" --> B
+  Z2 -- "cna/zona/2/..." --> B
+  B -- "cna/zona/{id}/comando" --> BORDA
+  B -- "cna/#" --> P
+  P -- "cna/zona/{id}/comando" --> B
+  P -- "MQTT/TLS<br/>/v1.6/devices/cna-*" --> U
+  U -- "cmd-ack, cmd-rearmar<br/>(last value)" --> P
+  B -- "cna/drone/missao" --> D
+  D -- "cna/drone/status, zona" --> B
